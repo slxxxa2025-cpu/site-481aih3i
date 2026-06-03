@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الرسم الرقمية السريعة 🎨</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #1e1e24;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-serif: center;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            color: #00ffcc;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            background: #2a2a35;
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        input[type="color"] {
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            background: none;
+        }
+
+        button {
+            background: #ff4a5a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s ease;
+        }
+
+        button:hover {
+            background: #ff2a3f;
+            transform: scale(1.05);
+        }
+
+        /* حاوية اللوحة */
+        #canvas-container {
+            display: grid;
+            grid-template-columns: repeat(20, 18px);
+            grid-template-rows: repeat(20, 18px);
+            gap: 1px;
+            background: #333;
+            padding: 5px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        }
+
+        .pixel {
+            width: 18px;
+            height: 18px;
+            background: #fff;
+            border-radius: 2px;
+            cursor: crosshair;
+            transition: background 0.1s ease;
+        }
+
+        .pixel:hover {
+            filter: brightness(0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>لوحة الرسم الذكية 🎨</h1>
+
+    <div class="controls">
+        <label for="colorPicker">اختر اللون:</label>
+        <input type="color" id="colorPicker" value="#00ffcc">
+        <button id="clearBtn">مسح اللوحة</button>
+    </div>
+
+    <!-- شبكة الرسم -->
+    <div id="canvas-container"></div>
+
+    <script>
+        const container = document.getElementById('canvas-container');
+        const colorPicker = document.getElementById('colorPicker');
+        const clearBtn = document.getElementById('clearBtn');
+        
+        // حجم الشبكة 20x20
+        const gridSize = 20 * 20; 
+        let isDrawing = false;
+
+        // توليد المربعات داخل اللوحة
+        for (let i = 0; i < gridSize; i++) {
+            const pixel = document.createElement('div');
+            pixel.classList.add('pixel');
+            
+            // الرسم عند الضغط والسحب الماوس
+            pixel.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                pixel.style.backgroundColor = colorPicker.value;
+            });
+
+            pixel.addEventListener('mouseover', () => {
+                if (isDrawing) {
+                    pixel.style.backgroundColor = colorPicker.value;
+                }
+            });
+
+            // دعم الشاشات لمس الموبايل
+            pixel.addEventListener('touchstart', () => {
+                pixel.style.backgroundColor = colorPicker.value;
+            });
+
+            container.appendChild(pixel);
+        }
+
+        // إيقاف الرسم عند رفع اليد عن الماوس
+        window.addEventListener('mouseup', () => {
+            isDrawing = false;
+        });
+
+        // زر مسح اللوحة وإعادتها بيضاء
+        clearBtn.addEventListener('click', () => {
+            const pixels = document.querySelectorAll('.pixel');
+            pixels.forEach(pixel => pixel.style.backgroundColor = '#fff');
+        });
+    </script>
+</body>
+</html>
